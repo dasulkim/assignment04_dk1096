@@ -1,0 +1,82 @@
+---
+title: "assignment04_dk1096"
+author: "Da Sul Kim"
+date: "10/5/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(readxl)
+library(ggplot2)
+library(tidyr)
+library(tidyverse)
+library(tibble)
+library(WDI)
+library(dplyr)
+library(ggrepel)
+```
+
+```{r setting dataset, echo=FALSE}
+informaldata<- read_xlsx("data/informaldata.xlsx")
+WDI <- WDI(
+  country = "all",
+  indicator = c("DT.ODA.OATL.KD",
+  "DT.ODA.ODAT.CD",
+  "DT.ODA.ALLD.KD",
+  "DC.DAC.TOTL.CD",
+  "GC.DOD.TOTL.GD.ZS",
+  "GC.XPN.TOTL.GD.ZS",
+  "NE.EXP.GNFS.ZS",
+  "BX.KLT.DINV.WD.GD.ZS",
+  "NY.GDP.MKTP.KD",
+  "NY.GDP.PCAP.KD",
+  "NY.GDP.PCAP.KD.ZG",
+  "NE.CON.GOVT.ZS",
+  "SE.XPD.TOTL.GD.ZS",
+  "MS.MIL.XPND.GD.ZS",
+  "NY.GDP.PETR.RT.ZS",
+  "BX.TRF.PWKR.DT.GD.ZS",
+ "GC.TAX.TOTL.GD.ZS",
+  "SE.PRM.TENR",
+  "SP.URB.TOTL.IN.ZS",
+  "SP.POP.TOTL",
+  "SI.POV.DDAY",
+  "SI.POV.LMIC",
+  "SI.POV.UMIC"),
+  start = 1960,
+  end = 2020,
+  extra = TRUE,
+  cache = NULL,
+  latest = NULL,
+  language = "en")
+colnames(WDI)[27] <- "scode"
+
+polity <- read_xls("data/p5v2018.xls")
+
+new <- left_join(x = WDI, y=polity, by=c("year", "scode"))
+new <- left_join(x = new, y = informaldata, by = c("year", "scode"))
+```
+
+## Four ggplot2 graphs
+
+# Graphs 1. 
+```{r graph1}
+new %>% 
+  filter(country.x == "Ethiopia") %>% 
+  group_by(polity2, year) %>% 
+  ggplot(aes(x=year, y=MIMIC_p, fill=MIMIC_p)) +
+  geom_col() +
+  theme_minimal() +
+  labs(x = "Year",
+       y = "The Share of Informal Economy (MIMIC)",
+       title = "The Share of the Informal Economy in Ethiopia (% of GDP)",
+       caption = "Source: World Bank",
+       fill = "Share")
+```
+
+
+
+
+
+
