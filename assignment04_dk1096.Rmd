@@ -93,7 +93,28 @@ new %>%
 
 # Graph 3.
 ```{r}
-
+new %>% 
+  filter(region == "Sub-Saharan Africa",
+         year ==2010) %>% 
+  mutate(pop = SP.POP.TOTL/1000000,
+         oda_gdp = DT.ODA.ODAT.CD/NY.GDP.MKTP.KD*100) %>% 
+  ggplot(aes(x = oda_gdp, y=DGE_p, col = income, size = pop)) +
+  geom_point(alpha = 0.5) +
+  scale_x_continuous(breaks = c(0, 10, 20, 30, 40, 50, 60, 70)) +
+  theme_classic()+
+  theme(plot.title = element_text(hjust=0.5),
+        panel.background=element_blank(),
+        panel.grid.minor=element_blank(),
+        panel.grid.major.y=element_blank(),
+        axis.ticks=element_blank(),
+        panel.border=element_blank())+
+  labs( x= "The Share of ODA (% of GDP)",
+        y = "The Share of Informal Economy (DGE) (%of GDP)",
+        size = "Population (in millions)",
+        col = "Income Group",
+        subtitle = "Source: World Bank",
+        caption = "Dynamic general equilibrium model-based (DGE) estimates of informal output (% of official GDP)",
+        title = "Informal Economy and ODA in Sub-Saharan Africa in 2010")
 ```
 
 
