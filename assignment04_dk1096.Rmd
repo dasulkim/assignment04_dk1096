@@ -60,7 +60,7 @@ new <- left_join(x = new, y = informaldata, by = c("year", "scode"))
 
 ## Four ggplot2 graphs
 
-# Graphs 1. 
+# Graph 1. 
 ```{r graph1}
 new %>% 
   filter(country.x == "Ethiopia") %>% 
@@ -75,7 +75,26 @@ new %>%
        fill = "Share")
 ```
 
+# Graph 2.
+```{r graph2}
+new %>% 
+  mutate(oda_gdp = DT.ODA.ODAT.CD/NY.GDP.MKTP.KD*100) %>% 
+  filter(country.x == "Ethiopia") %>%
+  drop_na(oda_gdp) %>% 
+  ggplot(aes(x = year, y = oda_gdp)) +
+  geom_line() +
+  scale_y_continuous(breaks=c(5, 10, 15))+
+  theme_minimal()+
+  labs(x = "Year",
+       y = "The Share of net ODA (% of GDP)",
+       title = "The Share of ODA in Ethiopia (% of GDP)",
+       caption = "Source: World Bank")
+```
 
+# Graph 3.
+```{r}
+
+```
 
 
 
