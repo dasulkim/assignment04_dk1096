@@ -6,9 +6,13 @@ library(tibble)
 library(WDI)
 library(dplyr)
 library(ggrepel)
+library(dp)
+
+library(writexl)
 penn <- read_xlsx("pwt100.xlsx", sheet = 3)
 wdi <- read_xlsx("data/WDI.xlsx", sheet =1)
 polity <- read_xls("data/p5v2018.xls")
+test <- read_xlsx("data/informaldata.xlsx")
   
 informal1 <- read_xlsx("data/informal.xlsx", sheet =2) 
 informal1<- informal1 %>%     
@@ -144,18 +148,25 @@ new <- left_join(x = new, y = informaldata, by = c("year", "scode"))
 
 
 ### Graph ####
-## 1. geom_col
+## 1. geom_boxplot
+
 new %>% 
-  filter(country.x == "Ethiopia") %>% 
-  group_by(polity2, year) %>% 
-  ggplot(aes(x=year, y=MIMIC_p, fill=MIMIC_p)) +
-  geom_col() +
-  theme_minimal() +
-  labs(x = "Year",
-       y = "The Share of Informal Economy (MIMIC)",
-       title = "The Share of the Informal Economy in Ethiopia (% of GDP)",
-       caption = "Source: World Bank",
-       fill = "Share")
+  drop_na(region, MIMIC_p) %>% 
+  ggplot(aes(x = region, y = MIMIC_p, group=region, fill=region))+
+  geom_boxplot() +
+  theme(legend.position="none",
+        axis.text.x = element_text(angle = 45, vjust = 1, hjust=1)) +
+  scale_fill_brewer(palette="BuPu") +
+  labs(x = "",
+       y = "The Share of Informal Economy (% of GDP)",
+       title = "The Share of Informal Economy by Region",
+       subtitle = "Source: World Bank",
+       caption = "The share of informal economy is calculated using multiple indicators multiple causes model-based (MIMIC) estimates of informal output (% of official GDP)"
+  )
+
+
+
+
 
 ## 2. geom_line
 new %>% 
@@ -198,7 +209,7 @@ new %>%
 
 table(new$region)
 
-## 4.
+## 4.geom_jitter, geom_smooth
  new %>% 
   filter(!(region=="Aggregates")) %>% 
   mutate(pop = SP.POP.TOTL/1000000) %>% 

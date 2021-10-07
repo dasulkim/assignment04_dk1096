@@ -17,7 +17,7 @@ library(dplyr)
 library(ggrepel)
 ```
 
-```{r setting dataset, echo=FALSE}
+```{r setting dataset, include = FALSE}
 informaldata<- read_xlsx("data/informaldata.xlsx")
 WDI <- WDI(
   country = "all",
@@ -63,17 +63,21 @@ new <- left_join(x = new, y = informaldata, by = c("year", "scode"))
 # Graph 1. 
 ```{r graph1}
 new %>% 
-  filter(country.x == "Ethiopia") %>% 
-  group_by(polity2, year) %>% 
-  ggplot(aes(x=year, y=MIMIC_p, fill=MIMIC_p)) +
-  geom_col() +
-  theme_minimal() +
-  labs(x = "Year",
-       y = "The Share of Informal Economy (MIMIC)",
-       title = "The Share of the Informal Economy in Ethiopia (% of GDP)",
-       caption = "Source: World Bank",
-       fill = "Share")
+  drop_na(region, MIMIC_p) %>% 
+  ggplot(aes(x = region, y = MIMIC_p, group=region, fill=region))+
+  geom_boxplot() +
+  theme(legend.position="none",
+        axis.text.x = element_text(angle = 45, vjust = 1, hjust=1)) +
+  scale_fill_brewer(palette="BuPu") +
+  labs(x = "",
+       y = "The Share of Informal Economy (% of GDP)",
+       title = "The Share of Informal Economy by Region",
+       subtitle = "Source: World Bank",
+       caption = "The share of informal economy is calculated using multiple indicators multiple causes model-based (MIMIC) estimates of informal output (% of official GDP)"
+  )
+
 ```
+
 
 # Graph 2.
 ```{r graph2}
@@ -117,6 +121,23 @@ new %>%
         title = "Informal Economy and ODA in Sub-Saharan Africa in 2010")
 ```
 
+# Graph 4.
+```{r}
+ new %>% 
+  filter(!(region=="Aggregates")) %>% 
+  mutate(pop = SP.POP.TOTL/1000000) %>% 
+  ggplot(aes(x=SE.PRM.TENR, y=Infsize_p)) +
+  geom_jitter(aes(col=income, size=pop)) +
+  geom_smooth(aes(col=income), method="lm", se=F)+
+  theme_bw() +
+  labs(x= "Primary School Enrollment Rate (% of primary school age children)",
+       y = "The Share of Informal Economy (MIMIC) (%of GDP)",
+       size = "Population (in millions)",
+       col = "Income Group",
+       subtitle = "Source: World Bank",
+       caption = "The Share of Informal Economy: employment outside the formal sector (% of total employment; International Labour Organization; hamonized series)",
+       title = "Informal Economy and Primary School Enrollment Rate from 1990 to 2000")
+```
 
 
 
