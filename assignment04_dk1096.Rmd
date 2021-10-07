@@ -15,6 +15,7 @@ library(tibble)
 library(WDI)
 library(dplyr)
 library(ggrepel)
+library(sjPlot)
 ```
 
 ```{r setting dataset, include = FALSE}
