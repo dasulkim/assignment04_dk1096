@@ -1,7 +1,7 @@
 ---
 title: "assignment04_dk1096"
 author: "Da Sul Kim"
-date: "10/5/2021"
+date: "10/10/2021"
 output: html_document
 ---
 
@@ -80,6 +80,7 @@ new %>%
   )
 
 ```
+
 This graph shows the share of the informal economy by region. Considering the difference of each region’s boxplot and divergent characteristics of regions, the graph implies that certain factors influence the share of the informal economy of each region. It suggests that countries in Latin America & Caribbean, and Sub-Saharan Africa need to reduce the share of the informal economy. It also raises a question about why North American countries have such a low share of the informal economy.  
 
 
@@ -100,6 +101,7 @@ new %>%
        subtitle = "from 1990 to 2018",
        caption = "Source: World Bank; The share of the informal economy is calculated using MIMIC model.")
 ```
+
 This graph demonstrates the share of official development assistance (ODA) and the informal economy (% of GDP) in Mozambique from 1990 to 2018. One of the expected determinants of the share of the informal economy is the share of ODA because enough ODA as unearned income can give an opportunity for a government not to tighten up its informal sector for levying tax by making the informal sector to be formal. On the other hand, if the share of ODA decrease, a government would have an incentive to collect tax than before. However, the graph of the Mozambique case suggests that at least in Mozambique the share of the ODA rarely has an association with the share of the informal economy. It suggests that other factors influence the informal economy, and donors don’t need to worry about the negative impact of ODA on the shadow economy, at least in Mozambique. 
 
 # Graph 3.
@@ -129,6 +131,7 @@ new %>%
         caption = "Dynamic general equilibrium model-based (DGE) estimates of informal output (% of official GDP)",
         title = "Informal Economy and ODA in Sub-Saharan Africa in 2010")
 ```
+
 This graph shows the relationship between the share of official development assistance (% of GDP) and the share of the informal economy (% of GDP) in Sub-Saharan Africa in 2010. The size of the point represents population size in millions, and the color of the point represents income group from low income to upper middle income. Each income group has a different pattern regarding ODA and the informal economy. Even though there are outliers, especially in the low middle income group and low income group, it suggests that the policy about the informal economy of each country should be decided based on their economic status because the different status of the economy in countries impact the size of the informal economy differently.  
 
 
@@ -150,6 +153,12 @@ This graph shows the relationship between the share of official development assi
        caption = "The share of informal economy is informal employment (% of total employment; International Labour Organization; hamonized series).",
        title = "Primary School Enrollment Rate and The Share of Informal Economy")
 ```
+
 This graph indicates the primary school enrollment rate and the share of the informal economy by income group. Provision of education is considered one of the determinants that can reduce the size of the informal economy by increasing the opportunity for educated people to belong to the formal sector. The graph shows differences in the impact of primary schooling on the informal economy by income group. More high income more an impact on reducing the share of the informal economy is. It suggests that countries with low income need to find out the other factors that give incentives or restrict the educated people to enter the informal sector. 
 
+# Data Source
+
+* World Bank, World Development Indicators (https://databank.worldbank.org/source/world-development-indicators)
+
+* Wolrd Bank, Informal Economy Database (https://www.worldbank.org/en/research/brief/informal-economy-database)
 
