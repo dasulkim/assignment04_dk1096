@@ -60,6 +60,7 @@ new <- left_join(x = new, y = informaldata, by = c("year", "scode"))
 ```
 
 ## Four ggplot2 graphs
+Four graphs are all about the informal economy. The informal economy includes all economic activities which are hidden from official authorities for monetary, regulatory, and institutional reasons. Its presence can be detrimental, as it distorts resource allocation, reduces tax revenue, and changes the distribution of income in unpredictable ways, reducing governments' revenue. 
 
 # Graph 1. 
 ```{r graph1}
@@ -71,40 +72,46 @@ new %>%
         axis.text.x = element_text(angle = 45, vjust = 1, hjust=1)) +
   scale_fill_brewer(palette="BuPu") +
   labs(x = "",
-       y = "The Share of Informal Economy (% of GDP)",
-       title = "The Share of Informal Economy by Region",
+       y = "The Share of the Informal Economy (% of GDP)",
+       title = "The Share of the Informal Economy by Region",
        subtitle = "Source: World Bank",
-       caption = "The share of informal economy is calculated using multiple indicators multiple causes model-based (MIMIC) estimates of informal output (% of official GDP)"
+       caption = "The share of the informal economy is calculated using multiple indicators multiple causes model-based (MIMIC) estimates of informal output (% of official GDP)"
   )
 
 ```
+This graph shows the share of the informal economy by region. Considering the difference of each region’s boxplot and divergent characteristics of regions, the graph implies that certain factors influence the share of the informal economy of each region. It suggests that countries in Latin America & Caribbean, and Sub-Saharan Africa need to reduce the share of the informal economy. It also raises a question about why North American countries have such a low share of the informal economy.  
 
 
 # Graph 2.
 ```{r graph2}
 new %>% 
   mutate(oda_gdp = DT.ODA.ODAT.CD/NY.GDP.MKTP.KD*100) %>% 
-  filter(country.x == "Ethiopia") %>%
+  filter(country.x == "Mozambique", year >=1990, year <= 2018) %>%
   drop_na(oda_gdp) %>% 
-  ggplot(aes(x = year, y = oda_gdp)) +
-  geom_line() +
-  scale_y_continuous(breaks=c(5, 10, 15))+
+  ggplot(aes(x = year)) +
+  geom_line(aes(y = oda_gdp)) +
+  geom_line(aes(y = MIMIC_p), color = "blue") +
   theme_minimal()+
+  scale_x_continuous(breaks=c(1990, 1995, 2000, 2005, 2010, 2015, 2018)) +
   labs(x = "Year",
-       y = "The Share of net ODA (% of GDP)",
-       title = "The Share of ODA in Ethiopia (% of GDP)",
-       caption = "Source: World Bank")
+       y = "The Share of net ODA (black) and the informal economy (blue) (% of GDP)",
+       title = "The Share of ODA and Informal Economy in Mozambique (% of GDP)",
+       subtitle = "from 1990 to 2018",
+       caption = "Source: World Bank; The share of the informal economy is calculated using MIMIC model.")
 ```
+This graph demonstrates the share of official development assistance (ODA) and the informal economy (% of GDP) in Mozambique from 1990 to 2018. One of the expected determinants of the share of the informal economy is the share of ODA because enough ODA as unearned income can give an opportunity for a government not to tighten up its informal sector for levying tax by making the informal sector to be formal. On the other hand, if the share of ODA decrease, a government would have an incentive to collect tax than before. However, the graph of the Mozambique case suggests that at least in Mozambique the share of the ODA rarely has an association with the share of the informal economy. It suggests that other factors influence the informal economy, and donors don’t need to worry about the negative impact of ODA on the shadow economy, at least in Mozambique. 
 
 # Graph 3.
 ```{r}
 new %>% 
   filter(region == "Sub-Saharan Africa",
          year ==2010) %>% 
+  filter(!(income=="High income")) %>% 
   mutate(pop = SP.POP.TOTL/1000000,
          oda_gdp = DT.ODA.ODAT.CD/NY.GDP.MKTP.KD*100) %>% 
   ggplot(aes(x = oda_gdp, y=DGE_p, col = income, size = pop)) +
   geom_point(alpha = 0.5) +
+  geom_smooth(method ="lm", se = FALSE) +
   scale_x_continuous(breaks = c(0, 10, 20, 30, 40, 50, 60, 70)) +
   theme_classic()+
   theme(plot.title = element_text(hjust=0.5),
@@ -121,24 +128,27 @@ new %>%
         caption = "Dynamic general equilibrium model-based (DGE) estimates of informal output (% of official GDP)",
         title = "Informal Economy and ODA in Sub-Saharan Africa in 2010")
 ```
+This graph shows the relationship between the share of official development assistance (% of GDP) and the share of the informal economy (% of GDP) in Sub-Saharan Africa in 2010. The size of the point represents population size in millions, and the color of the point represents income group from low income to upper middle income. Each income group has a different pattern regarding ODA and the informal economy. Even though there are outliers, especially in the low middle income group and low income group, it suggests that the policy about the informal economy of each country should be decided based on their economic status because the different status of the economy in countries impact the size of the informal economy differently.  
+
 
 # Graph 4.
 ```{r}
  new %>% 
   filter(!(region=="Aggregates")) %>% 
+  filter(year>=1990) %>% 
   mutate(pop = SP.POP.TOTL/1000000) %>% 
-  ggplot(aes(x=SE.PRM.TENR, y=Infsize_p)) +
-  geom_jitter(aes(col=income, size=pop)) +
+  ggplot(aes(x=SE.PRM.TENR, y=Infemp_p)) +
+  geom_jitter(aes(col=income)) +
   geom_smooth(aes(col=income), method="lm", se=F)+
   theme_bw() +
+  xlim(30, 100) +
   labs(x= "Primary School Enrollment Rate (% of primary school age children)",
-       y = "The Share of Informal Economy (MIMIC) (%of GDP)",
-       size = "Population (in millions)",
+       y = "The Share of Informal Economy (%of GDP)",
        col = "Income Group",
-       subtitle = "Source: World Bank",
-       caption = "The Share of Informal Economy: employment outside the formal sector (% of total employment; International Labour Organization; hamonized series)",
-       title = "Informal Economy and Primary School Enrollment Rate from 1990 to 2000")
+       subtitle = "from 1990 to 2000; Source: World Bank",
+       caption = "The share of informal economy is informal employment (% of total employment; International Labour Organization; hamonized series).",
+       title = "Primary School Enrollment Rate and The Share of Informal Economy")
 ```
-
+This graph indicates the primary school enrollment rate and the share of the informal economy by income group. Provision of education is considered one of the determinants that can reduce the size of the informal economy by increasing the opportunity for educated people to belong to the formal sector. The graph shows differences in the impact of primary schooling on the informal economy by income group. More high income more an impact on reducing the share of the informal economy is. It suggests that countries with low income need to find out the other factors that give incentives or restrict the educated people to enter the informal sector. 
 
 

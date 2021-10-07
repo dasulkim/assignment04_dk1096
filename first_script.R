@@ -7,7 +7,7 @@ library(WDI)
 library(dplyr)
 library(ggrepel)
 library(dp)
-
+library(sjPlot)
 library(writexl)
 penn <- read_xlsx("pwt100.xlsx", sheet = 3)
 wdi <- read_xlsx("data/WDI.xlsx", sheet =1)
@@ -150,7 +150,7 @@ new <- left_join(x = new, y = informaldata, by = c("year", "scode"))
 ### Graph ####
 ## 1. geom_boxplot
 
-new %>% 
+g1 <- new %>% 
   drop_na(region, MIMIC_p) %>% 
   ggplot(aes(x = region, y = MIMIC_p, group=region, fill=region))+
   geom_boxplot() +
@@ -163,6 +163,9 @@ new %>%
        subtitle = "Source: World Bank",
        caption = "The share of informal economy is calculated using multiple indicators multiple causes model-based (MIMIC) estimates of informal output (% of official GDP)"
   )
+
+
+
 
 
 
@@ -182,16 +185,31 @@ new %>%
        title = "The Share of ODA in Ethiopia (% of GDP)",
        caption = "Source: World Bank")
 
+#oda/gdp - mimic
+new %>% 
+  mutate(oda_gdp = DT.ODA.ODAT.CD/NY.GDP.MKTP.KD*100) %>% 
+  filter(!(region==c("Aggregates","North America") & income=="High Income"), year==2010) %>% 
+  group_by(country.x) %>% 
+  summarize(odagdpm = mean(oda_gdp, na.rm=TRUE), 
+            mimicm = mean(MIMIC_p, na.rm =TRUE)) %>% 
+  ggplot(aes(x=odagdpm, y=mimicm))+
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  xlim(0, 20)
+
 
 ## 3. geom_point
 new %>% 
   filter(region == "Sub-Saharan Africa",
-         year ==2010) %>% 
+         year ==2010,
+         !(income == "High income")) %>% 
   mutate(pop = SP.POP.TOTL/1000000,
          oda_gdp = DT.ODA.ODAT.CD/NY.GDP.MKTP.KD*100) %>% 
   ggplot(aes(x = oda_gdp, y=DGE_p, col = income, size = pop)) +
   geom_point(alpha = 0.5) +
-  scale_x_continuous(breaks = c(0, 10, 20, 30, 40, 50, 60, 70)) +
+  geom_smooth(method = "lm", se = FALSE) +
+  xlim(0, 70) +
+  scale_x_continuous(breaks = c(0, 10, 20, 30, 40, 50, 60, 70))+
   theme_classic()+
   theme(plot.title = element_text(hjust=0.5),
         panel.background=element_blank(),
