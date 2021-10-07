@@ -164,25 +164,19 @@ g1 <- new %>%
        caption = "The share of informal economy is calculated using multiple indicators multiple causes model-based (MIMIC) estimates of informal output (% of official GDP)"
   )
 
-
-
-
-
-
-
-
+table(new$country.x)
 ## 2. geom_line
 new %>% 
   mutate(oda_gdp = DT.ODA.ODAT.CD/NY.GDP.MKTP.KD*100) %>% 
-  filter(country.x == "Ethiopia") %>%
+  filter(country.x == "Mozambique", year >=1990) %>%
   drop_na(oda_gdp) %>% 
-  ggplot(aes(x = year, y = oda_gdp)) +
-  geom_line() +
-  scale_y_continuous(breaks=c(5, 10, 15))+
+  ggplot(aes(x = year)) +
+  geom_line(aes(y = oda_gdp)) +
+  geom_line(aes(y = MIMIC_p), color = "blue") +
   theme_minimal()+
   labs(x = "Year",
-       y = "The Share of net ODA (% of GDP)",
-       title = "The Share of ODA in Ethiopia (% of GDP)",
+       y = "The Share of net ODA (black) and informal economy (blue) (% of GDP)",
+       title = "The Share of ODA and Informal Economy in Ethiopia (% of GDP)",
        caption = "Source: World Bank")
 
 #oda/gdp - mimic
